@@ -1,10 +1,10 @@
-const HttpServer = require('./httpServer');
-const Blockchain = require('./blockchain');
-const Operator = require('./operator');
-const Miner = require('./miner');
-const Node = require('./node');
+const HttpServer = require('./httpServer/httpServer');
+const Blockchain = require('./blockchain/blockchain');
+const Operator = require('./operator/operator');
+const Miner = require('./miner/miner');
+const Node = require('./node/node');
 
-module.exports = function naivecoin(host, port, peers, logLevel, name) {
+module.exports = function moonchain(host, port, peers, logLevel, name) {
     host = process.env.HOST || host || 'localhost';
     port = process.env.PORT || process.env.HTTP_PORT || port || 3001;
     peers = (process.env.PEERS ? process.env.PEERS.split(',') : peers || []);
