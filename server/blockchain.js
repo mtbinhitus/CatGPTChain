@@ -37,6 +37,7 @@ class Blockchain {
     this.difficulty = 4;
     this.pendingTransactions = [];
     this.miningReward = 100;
+    this.networkNodes = [];
   }
 
   createGenesisBlock() {
@@ -108,6 +109,54 @@ class Blockchain {
 
     return true;
   }
+
+  getAllTransactions() {
+    const transactions = [];
+    for (const block of this.chain) {
+      for (const transaction of block.data) {
+        transactions.push(transaction);
+      }
+    }
+    return transactions;
+  }
+
+  registerNode(nodeUrl) {
+    if (!this.networkNodes.includes(nodeUrl)) {
+      this.networkNodes.push(nodeUrl);
+    }
+  }
+
+  async syncChain() {
+    const promises = this.networkNodes.map((nodeUrl) =>
+      axios.get(`${nodeUrl}/blocks`)
+    );
+
+    try {
+      const results = await Promise.all(promises);
+      const remoteChains = results.map((res) => res.data);
+
+      // Find the longest chain
+      const longestChain = remoteChains.reduce((currentChain, remoteChain) => {
+        if (remoteChain.length > currentChain.length) {
+          return remoteChain;
+        } else {
+          return currentChain;
+        }
+      }, this.chain);
+
+      // Update the chain if the longest chain is valid
+      if (this.isChainValid(longestChain)) {
+        this.chain = longestChain;
+        return true;
+      } else {
+        return false;
+      }
+    } catch (error) {
+      console.error('Error syncing chain:', error.message);
+      return false;
+    }
+  }
+
 }
 
 module.exports.Blockchain = Blockchain;

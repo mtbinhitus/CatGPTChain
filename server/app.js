@@ -40,6 +40,26 @@ app.get("/balance/:publicKey", (req, res) => {
   res.json({ balance });
 });
 
+app.get('/transactions', (req, res) => {
+  const allTransactions = myBlockchain.getAllTransactions();
+  res.json(allTransactions);
+});
+
+app.post('/register-node', (req, res) => {
+  const { nodeUrl } = req.body;
+  myBlockchain.registerNode(nodeUrl);
+  res.json({ message: 'Node registered successfully!' });
+});
+
+app.get('/sync-chain', async (req, res) => {
+  const synced = await myBlockchain.syncChain();
+  if (synced) {
+    res.json({ message: 'Chain synchronized successfully!' });
+  } else {
+    res.status(500).json({ message: 'Failed to synchronize chain.' });
+  }
+});
+
 app.listen(port, () => {
   console.log(`Blockchain API listening on port ${port}`);
 });
