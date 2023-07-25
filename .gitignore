@@ -32,3 +32,10 @@ npm-debug.log
 .DS_Store
 
 .env
+
+.nyc_output
+.idea
+*.log
+yarn.lock
+.vscode
+data
