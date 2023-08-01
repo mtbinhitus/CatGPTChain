@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-const moonchain = require('./moonChain');
+const catgptchain = require('./catgptchain');
 
 const argv = require('yargs')
     .usage('Usage: $0 [options]')
@@ -16,4 +16,4 @@ const argv = require('yargs')
     .alias('h', 'help')
     .argv;
 
-moonchain(argv.host, argv.port, argv.peers, argv.logLevel, argv.name);
+catgptchain(argv.host, argv.port, argv.peers, argv.logLevel, argv.name);

@@ -9,8 +9,8 @@ function Block() {
     const { blockNumberOrHash } = useParams();
     const info = blocksData.find(
         (blockData) =>
-            blockData.number == blockNumberOrHash ||
-            blockData.hash == blockNumberOrHash
+            blockData.number === blockNumberOrHash ||
+            blockData.hash === blockNumberOrHash
     );
 
     return (

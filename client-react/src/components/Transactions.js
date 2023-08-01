@@ -24,7 +24,7 @@ function Transactions() {
             {blockNumber
                 ? transactionsToComponent(
                       blocksData.find(
-                          (blockData) => blockData.number == blockNumber
+                          (blockData) => blockData.number === blockNumber
                       ).transactions
                   )
                 : transactionsToComponent(transactions)}

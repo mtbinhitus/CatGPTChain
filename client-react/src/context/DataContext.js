@@ -1,7 +1,7 @@
 import React from "react";
 import { useState } from "react";
 
-import request from "../utils/request";
+import request, { getAllBlocks, getBlockByIndex, getLatestBlock } from "../utils/request";
 
 const DataContext = React.createContext();
 
@@ -10,25 +10,20 @@ function DataContextProvider({ children }) {
     const [transactions, setTransactions] = useState([]);
 
     async function getBlockInformation() {
-        const blockNumber = await alchemy.core.getBlockNumber();
-
-        for (let i = 0; i < 20; i++) {
-            const info = await alchemy.core.getBlockWithTransactions(
-                blockNumber - i
+        const lastestBlock = await getLatestBlock();
+        console.log(lastestBlock.index);
+        console.log(lastestBlock);
+        for (let i = 0; i < lastestBlock.index; i++) {
+            const info = await getBlockByIndex(
+                lastestBlock.index - i
             );
 
             const blockObject = {
-                number: info.number,
+                number: info.index,
                 timestamp: info.timestamp,
-                miner: info.miner,
-                gasUsed: info.gasUsed.toString(),
-                gasLimit: info.gasLimit.toString(),
-                baseFeeInGwei: info.baseFeePerGas.toString() / 1000000000,
-                extraData: info.extraData,
                 hash: info.hash,
-                parentHash: info.parentHash,
+                previousHash: info.previousHash,
                 nonce: info.nonce,
-                difficulty: info.difficulty,
                 transactions: info.transactions,
             };
 
@@ -36,7 +31,7 @@ function DataContextProvider({ children }) {
                 return [...prevData, blockObject];
             });
 
-            if (i == 0) {
+            if (i === 0) {
                 setTransactions((prevData) => {
                     return [...prevData, ...blockObject.transactions];
                 });

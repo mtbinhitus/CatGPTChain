@@ -1,4 +1,5 @@
 const express = require('express');
+const cors = require('cors');
 const bodyParser = require('body-parser');
 const swaggerUi = require('swagger-ui-express');
 const R = require('ramda');
@@ -16,6 +17,7 @@ const timeago = require('timeago.js');
 class HttpServer {
     constructor(node, blockchain, operator, miner) {
         this.app = express();
+        this.app.use(cors());
 
         const projectWallet = (wallet) => {
             return {

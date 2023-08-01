@@ -1,5 +1,5 @@
 import { useEffect, useContext } from "react";
-import { Switch, Route } from "react-router-dom";
+import { Routes, Route } from "react-router-dom";
 import { DataContext } from "./context/DataContext";
 
 import "./App.css";
@@ -24,26 +24,14 @@ function App() {
         <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-1 bg-gray-50">
-                <Switch>
-                    <Route exact path="/">
-                        <Main />
-                    </Route>
-                    <Route exact path="/blocks">
-                        <Blocks />
-                    </Route>
-                    <Route path="/block/:blockNumberOrHash">
-                        <Block />
-                    </Route>
-                    <Route exact path="/txs">
-                        <Transactions />
-                    </Route>
-                    <Route path="/tx/:hash">
-                        <Transaction />
-                    </Route>
-                    <Route path="/address/:address">
-                        <AddressDetails />
-                    </Route>
-                </Switch>
+                <Routes>
+                    <Route exact path="/" element={<Main/>} />
+                    <Route exact path="/blocks" element={<Blocks/>} />
+                    <Route path="/block/:blockNumberOrHash" element={<Block />} />
+                    <Route exact path="/txs" element={<Transactions />} />
+                    <Route path="/tx/:hash" element={<Transaction />} />
+                    <Route path="/address/:address" element={ <AddressDetails />} />
+                </Routes>
             </main>
             <Footer />
         </div>

@@ -18,7 +18,7 @@ function Main() {
 
                         return (
                             <div
-                                key={block.number}
+                                key={block.index}
                                 className="flex justify-between py-4 items-center"
                             >
                                 <div className="flex w-1/2 items-center">
@@ -26,10 +26,10 @@ function Main() {
                                         Bk
                                     </h2>
                                     <Link
-                                        to={`/block/${block.number}`}
+                                        to={`/block/${block.index}`}
                                         className=" text-[#357BAD]"
                                     >
-                                        {block.number}
+                                        {block.index}
                                     </Link>
                                 </div>
                                 <div className="w-60">
@@ -37,16 +37,16 @@ function Main() {
                                         Fee Recipient{" "}
                                         <span className="text-[#357BAD]">
                                             <Link
-                                                to={`/address/${block.miner}`}
+                                                to={`/address/${block.hash}`}
                                             >
-                                                {block.miner.slice(0, 12)}
+                                                {block.hash.slice(0, 12)}
                                             </Link>
                                         </span>
                                         ...
                                     </p>
                                     <p className="text-[#357BAD]">
                                         <Link to={`/txs?block=${block.number}`}>
-                                            {block.transactions.length} txs
+                                            {block.transactions.length} txns
                                         </Link>
                                     </p>
                                 </div>
@@ -89,20 +89,21 @@ function Main() {
                                         {tx.hash.slice(0, 16)}...
                                     </Link>
                                 </div>
-                                <p>
+                                {tx.type !== "reward" ?
+                                (<p>
                                     From{" "}
                                     <span className="text-[#357BAD]">
-                                        <Link to={`/address/${tx.from}`}>
-                                            {tx.from.slice(0, 12)}
+                                        <Link to={`/address/${tx.data.inputs[0].address}`}>
+                                            {tx.data.inputs[0].address.slice(0, 12)}
                                         </Link>
                                     </span>
                                     ...
-                                </p>
+                                </p>) : <p>{tx.type}</p>}
                                 <p>
                                     To{" "}
                                     <span className="text-[#357BAD]">
-                                        <Link to={`/address/${tx.to}`}>
-                                            {tx.to.slice(0, 12)}
+                                        <Link to={`/address/${tx.data.outputs[0].address}`}>
+                                            {tx.data.outputs[0].address.slice(0, 12)}
                                         </Link>
                                     </span>
                                     ...

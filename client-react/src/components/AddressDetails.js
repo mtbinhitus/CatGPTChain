@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useParams, Link } from "react-router-dom";
-import alchemy from "../utils/request";
+import request, { getBalanceByAddress } from "../utils/request";
 
 function AddressDetails() {
     const { address } = useParams();
@@ -12,16 +12,16 @@ function AddressDetails() {
     useEffect(() => {
         // * immediatly called function.
         (async () => {
-            const balance = await alchemy.core.getBalance(address);
-            setBalance(ethers.utils.formatEther(balance).toString());
-            const { transfers } = await alchemy.core.getAssetTransfers({
-                fromBlock: "0x0",
-                fromAddress: address,
-                category: ["external"],
-                withMetadata: true,
-                maxCount: "0x64",
-            });
-            setExternalTxs(transfers.filter((tx) => tx.category == "external"));
+            const balance = await getBalanceByAddress(address);
+            setBalance(ethers.formatEther(balance).toString());
+            // const { transfers } = await getAssetTransfers({
+            //     fromBlock: "0x0",
+            //     fromAddress: address,
+            //     category: ["external"],
+            //     withMetadata: true,
+            //     maxCount: "0x64",
+            // });
+            // setExternalTxs(transfers.filter((tx) => tx.category == "external"));
             setLoading(false);
         })();
     }, [address]);

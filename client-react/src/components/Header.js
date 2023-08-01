@@ -1,19 +1,20 @@
 import { useState } from "react";
 
-import { Link, useHistory, useParams } from "react-router-dom";
-import ETHERSCAN_LOGO from "../assets/images/etherscan-logo-circle.png";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import CATGPT_LOGO from "../assets/images/logo.png";
 
 function Header() {
     const [address, setAddress] = useState("");
-    const history = useHistory();
+    const navigate = useNavigate();
 
     function handleOnSubmit(event) {
         event.preventDefault();
-        const { location } = history;
+        const { location } = navigate;
+        console.log(location);
 
         // * if it is not the similar path only then push a new path. It helps to prevent duplicate paths.
         if (location.pathname != `/address/${address}`) {
-            history.push(`/address/${address}`);
+            navigate.push(`/address/${address}`);
         }
 
         setAddress("");
@@ -22,10 +23,10 @@ function Header() {
     return (
         <header className="flex px-24 py-6 bg-white items-center border-b">
             <Link to="/">
-                <img src={ETHERSCAN_LOGO} className="h-10"></img>
+                <img src={CATGPT_LOGO} className="h-10"></img>
             </Link>
             <h1 className="ml-4 text-[#21325B] font-bold text-2xl mr-auto">
-                <Link to="/">Etherscan Clone</Link>
+                <Link to="/">CatGPT Explorer</Link>
             </h1>
             <form className="w-5/12 ml-4" onSubmit={handleOnSubmit}>
                 <label className="mb-2 text-sm font-medium text-gray-900 sr-only">
