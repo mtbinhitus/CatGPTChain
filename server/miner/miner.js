@@ -14,13 +14,13 @@ class Miner {
     mine(rewardAddress, feeAddress) {
         let baseBlock = Miner.generateNextBlock(rewardAddress, feeAddress, this.blockchain);
         process.execArgv = R.reject((item) => item.includes('debug'), process.execArgv);
-
+        console.log("Miner mine")
         /* istanbul ignore next */
         const thread = spawn(function (input, done) {
             /*eslint-disable */
             require(input.__dirname + '/../util/consoleWrapper.js')('mine-worker', input.logLevel);
             const Block = require(input.__dirname + '/../blockchain/block');
-            const Miner = require(input.__dirname);
+            const Miner = require(input.__dirname +  '/../miner/miner');
             /*eslint-enable */
 
             done(Miner.proveWorkFor(Block.fromJson(input.jsonBlock), input.difficulty));
