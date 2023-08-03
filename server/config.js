@@ -9,7 +9,7 @@ module.exports = {
     genesisBlock: {
         index: 0,
         previousHash: '0',
-        timestamp: Date.now(),
+        timestamp: "8/4/2023",
         nonce: 0,
         transactions: [
             {
