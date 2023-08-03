@@ -174,4 +174,31 @@ export async function createNewAddressById(walletid, password) {
 }
 
 
+export async function createTransaction(fromAds, toAds, amount, walletid,password) {
+    const respone = await request
+        .post(
+            `/operator/wallets/${walletid}/transactions`,
+            {
+                fromAddress: fromAds,
+                toAddress: toAds,
+                amount: amount,
+                changeAddress: fromAds
+            },
+            {
+                headers: {
+                    'Content-type': 'application/json; charset=UTF-8',
+                    password: password
+                },
+            },
+        )
+        .then((res) => {
+            return res;
+        })
+        .catch((error) => {
+            return error.response;
+        });
+
+    return respone;
+}
+
 export default request;

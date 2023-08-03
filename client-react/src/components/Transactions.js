@@ -16,10 +16,10 @@ function Transactions() {
         <section className="bg-white mx-24 px-8 py-4 my-8 border rounded-lg divide-y">
             <div className="flex py-1 bg-sky-50">
                 <p className="w-3/12 py-3 text-[#6C757E] font-bold">Txn Hash</p>
-                <p className="w-2/12 py-3 text-[#6C757E] font-bold">Block</p>
+                <p className="w-2/12 py-3 text-[#6C757E] font-bold">Type</p>
                 <p className="w-3/12 py-3 text-[#6C757E] font-bold">From</p>
                 <p className="w-3/12 py-3 text-[#6C757E] font-bold">To</p>
-                <p className="w-2/12 py-3 text-[#6C757E] font-bold">Data</p>
+                <p className="w-2/12 py-3 text-[#6C757E] font-bold">Amount</p>
             </div>
             {blockNumber
                 ? transactionsToComponent(
@@ -39,22 +39,26 @@ function transactionsToComponent(txs) {
                 <p className="w-3/12 text-[#357BAD]">
                     <Link to={`/tx/${tx.hash}`}>{tx.hash.slice(0, 16)}...</Link>
                 </p>
-                <p className="w-2/12 text-[#357BAD]">
-                    <Link to={`/block/${tx.blockNumber}`}>
-                        {tx.blockNumber}
-                    </Link>
+                <p className="w-2/12">{tx.type}</p>
+                <p className="w-3/12 text-[#357BAD]">
+                {tx.type !== "reward" && tx.type !== "genesis" && tx.type !== "fee" ?
+                    (<Link to={`/address/${tx.from}`}>
+                        {tx.data.inputs[0].address.slice(0, 16)}...
+                    </Link>) : <></>
+                }
                 </p>
                 <p className="w-3/12 text-[#357BAD]">
-                    <Link to={`/address/${tx.from}`}>
-                        {tx.from.slice(0, 16)}...
-                    </Link>
+                {tx.type !== "genesis" ? (
+                    <Link to={`/address/${tx.data.outputs[0]}`}>
+                        {tx.data.outputs[0].address.slice(0, 16)}...
+                    </Link>) :
+                    (<></>)
+                }
                 </p>
-                <p className="w-3/12 text-[#357BAD]">
-                    <Link to={`/address/${tx.to}`}>
-                        {tx.to.slice(0, 16)}...
-                    </Link>
-                </p>
-                <p className="w-2/12">{tx.data.slice(0, 16)}...</p>
+                {tx.type === "fee" ? (
+                   <p className="w-2/12">{(tx.data.outputs[0].amount/100000000).toFixed(10)} CatGPT</p>):
+                   tx.type !== "genesis" ? ( <p className="w-2/12">{(tx.data.outputs[0].amount/100000000)} CatGPT</p>) : <></>
+                }
             </section>
         );
     });

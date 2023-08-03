@@ -10,24 +10,17 @@ function DataContextProvider({ children }) {
     const [transactions, setTransactions] = useState([]);
     const [walletInfo, setWalletInfo] = useState([]);
 
-    async function getInfoFromAPI() {
-        const lastestBlock = await getLatestBlock();
-        console.log(lastestBlock.data.index);
-
-        for (let i = 0; i < lastestBlock.data.index + 1; i++) {
-            const info = await getBlockByIndex(
-                lastestBlock.data.index - i
-            );
-            console.log(i);
+    async function getInfoFromAPI(blocks) {
+        blocks.forEach(info => {
             console.log(info)
 
             const blockObject = {
-                index: info.data.index,
-                timestamp: info.data.timestamp,
-                hash: info.data.hash,
-                previousHash: info.data.previousHash,
-                nonce: info.data.nonce,
-                transactions: info.data.transactions,
+                index: info.index,
+                timestamp: info.timestamp,
+                hash: info.hash,
+                previousHash: info.previousHash,
+                nonce: info.nonce,
+                transactions: info.transactions,
             };
 
             setBlocksData((prevData) => {
@@ -37,10 +30,12 @@ function DataContextProvider({ children }) {
             setTransactions((prevData) => {
                 return [...prevData, ...blockObject.transactions];
             });
-        }
+        });
     }
     async function getBlockInformation() {
-        await getInfoFromAPI();
+        const blocks = await getAllBlocks();
+        console.log(blocks);
+        await getInfoFromAPI(blocks.data.reverse());
         console.log(blocksData);
     }
 

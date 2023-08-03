@@ -4,16 +4,17 @@ import { useContext, useEffect, useState } from "react";
 import { DataContext } from "../context/DataContext";
 
 function Main() {
-  const { blocksData, transactions } = useContext(DataContext);
+  const { blocksData, transactions,  } = useContext(DataContext);
 
-  useEffect(() => {}, [blocksData]);
+  useEffect(() => {
+  }, [blocksData, transactions]);
 
   return (
     <div className="flex px-24 py-8 items-stretch">
       <div className="text-left px-4 border rounded-lg divide-y w-1/2 mr-2 bg-white">
         <h1 className="py-4 text-xl font-bold">Latest Blocks</h1>
         {blocksData.length ? (
-          blocksData.map((block, index) => {
+          blocksData.slice(0, blocksData.length/2).map((block, index) => {
             if (index >= 10) {
               return;
             }
@@ -66,7 +67,7 @@ function Main() {
       <div className="text-left px-8 border rounded-lg  divide-y w-1/2 ml-2 bg-white">
         <h1 className="py-4 text-xl font-bold">Latest Transactions</h1>
         {transactions.length ? (
-          transactions.map((tx, index) => {
+          transactions.slice(0, blocksData.length/2).map((tx, index) => {
             if (index >= 10) {
               return;
             }
@@ -84,7 +85,7 @@ function Main() {
                     {tx.hash.slice(0, 16)}...
                   </Link>
                 </div>
-                {tx.type !== "reward" && tx.type !== "genesis" ? (
+                {tx.type !== "reward" && tx.type !== "genesis" && tx.type !== "fee" ? (
                   <p>
                     From{" "}
                     <span className="text-[#357BAD]">

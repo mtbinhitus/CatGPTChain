@@ -27,7 +27,6 @@ function CreateWallet() {
     }
     else {
         saveWalletInfo({id: res.data.id, addresses: [], password: password});
-        saveWalletInfo(res.data);
     }
     console.log(walletInfo);
   };

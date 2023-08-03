@@ -6,6 +6,7 @@ import request, {
   getInfoWalletById,
   mineBlock,
   createNewAddressById,
+  createTransaction,
 } from "../utils/request";
 import CreateWallet from "./CreateWallet";
 import { DataContext } from "../context/DataContext";
@@ -13,6 +14,9 @@ import { DataContext } from "../context/DataContext";
 function Wallet() {
   const [balance, setBalance] = useState(0);
   const [addressid, setAddressID] = useState("");
+  const [fromaddress, setFromAddress] = useState("");
+  const [amount, setAmount] = useState(0);
+  const [toaddress, setToAddress] = useState("");
   const [loading, setLoading] = useState(true);
   const { walletInfo, saveWalletInfo } = useContext(DataContext);
   const [errorMsg, setErrorMsg] = useState("");
@@ -24,6 +28,7 @@ function Wallet() {
   const getBalanceWallet = async () => {
     walletInfo.addresses.forEach(async (ads) => {
       let bal = await getBalanceByAddress(ads);
+      console.log(bal);
       if (bal.status === 200) {
         setBalance(balance + bal.data.balance);
       }
@@ -38,6 +43,19 @@ function Wallet() {
       console.log(res);
       if (res.data.status === 201) alert("Mint successfully!");
     }
+    setBalance(0);
+    getBalanceWallet();
+  };
+
+  const sendCoin = async () => {
+    const res = await createTransaction(
+      fromaddress,
+      toaddress,
+      amount * 100000000,
+      walletInfo.id,
+      walletInfo.password
+    );
+    console.log(res);
   };
 
   const createNewAddress = async () => {
@@ -79,9 +97,12 @@ function Wallet() {
         </h1>
         {walletInfo.addresses.map((ads, index) => {
           return (
-            <h1 className="font-bold">
-              Address {index}: <span className="ml-4 font-normal">{ads}</span>
-            </h1>
+            <>
+              <h1 className="font-bold">
+                Address {index}: <span className="ml-4 font-normal">{ads}</span>
+              </h1>
+              <h2 className="font-bold">{}</h2>
+            </>
           );
         })}
         <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
@@ -111,9 +132,7 @@ function Wallet() {
         </div>
 
         <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
-          <h1 className="font-bold">
-            Mine new Block!
-          </h1>
+          <h1 className="font-bold">Mine new Block!</h1>
           <div>
             <label
               htmlFor="text"
@@ -144,9 +163,27 @@ function Wallet() {
         </div>
 
         <div className="mt-2 sm:mx-auto sm:w-full sm:max-w-sm">
-          <h1 className="font-bold">
-            Send CatGPT to other Address:
-          </h1>
+          <h1 className="font-bold">Send CatGPT to other Address:</h1>
+          <div>
+            <label
+              htmlFor="text"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              From Address:
+            </label>
+            <div className="mt-2 mb-2">
+              <input
+                id="fromaddress"
+                value={fromaddress}
+                onChange={(e) => setFromAddress(e.target.value)}
+                name="fromaddress"
+                type="text"
+                autoComplete="text"
+                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
           <div>
             <label
               htmlFor="text"
@@ -156,10 +193,10 @@ function Wallet() {
             </label>
             <div className="mt-2 mb-2">
               <input
-                id="addressid"
-                value={addressid}
-                onChange={(e) => setAddressID(e.target.value)}
-                name="addressid"
+                id="toaddress"
+                value={toaddress}
+                onChange={(e) => setToAddress(e.target.value)}
+                name="toaddress"
                 type="text"
                 autoComplete="text"
                 required
@@ -167,8 +204,30 @@ function Wallet() {
               />
             </div>
           </div>
+
+          <div>
+            <label
+              htmlFor="text"
+              className="block text-sm font-medium leading-6 text-gray-900"
+            >
+              Amount:
+            </label>
+            <div className="mt-2 mb-2">
+              <input
+                id="amount"
+                value={amount}
+                onChange={(e) => setAmount(e.target.value)}
+                name="amount"
+                type="text"
+                autoComplete="text"
+                required
+                className="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+            </div>
+          </div>
+
           <button
-            onClick={mintCoin}
+            onClick={sendCoin}
             type="button"
             className="flex w-full justify-center rounded-md bg-indigo-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
