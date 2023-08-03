@@ -8,40 +8,50 @@ const DataContext = React.createContext();
 function DataContextProvider({ children }) {
     const [blocksData, setBlocksData] = useState([]);
     const [transactions, setTransactions] = useState([]);
+    const [walletInfo, setWalletInfo] = useState([]);
 
-    async function getBlockInformation() {
+    async function getInfoFromAPI() {
         const lastestBlock = await getLatestBlock();
-        console.log(lastestBlock.index);
-        console.log(lastestBlock);
-        for (let i = 0; i < lastestBlock.index; i++) {
+        console.log(lastestBlock.data.index);
+
+        for (let i = 0; i < lastestBlock.data.index + 1; i++) {
             const info = await getBlockByIndex(
-                lastestBlock.index - i
+                lastestBlock.data.index - i
             );
+            console.log(i);
+            console.log(info)
 
             const blockObject = {
-                number: info.index,
-                timestamp: info.timestamp,
-                hash: info.hash,
-                previousHash: info.previousHash,
-                nonce: info.nonce,
-                transactions: info.transactions,
+                index: info.data.index,
+                timestamp: info.data.timestamp,
+                hash: info.data.hash,
+                previousHash: info.data.previousHash,
+                nonce: info.data.nonce,
+                transactions: info.data.transactions,
             };
 
             setBlocksData((prevData) => {
                 return [...prevData, blockObject];
             });
 
-            if (i === 0) {
-                setTransactions((prevData) => {
-                    return [...prevData, ...blockObject.transactions];
-                });
-            }
+            setTransactions((prevData) => {
+                return [...prevData, ...blockObject.transactions];
+            });
         }
     }
+    async function getBlockInformation() {
+        await getInfoFromAPI();
+        console.log(blocksData);
+    }
+
+    function saveWalletInfo(wallet) {
+        setWalletInfo(wallet);
+    }
+
 
     return (
         <DataContext.Provider
-            value={{ getBlockInformation, blocksData, transactions }}
+            value={{ getBlockInformation, blocksData, transactions, walletInfo, saveWalletInfo}}
         >
             {children}
         </DataContext.Provider>

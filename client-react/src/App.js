@@ -12,6 +12,7 @@ import Transactions from "./components/Transactions";
 import Transaction from "./components/Transaction";
 import AddressDetails from "./components/AddressDetails";
 import Footer from "./components/Footer";
+import Wallet from "./components/Wallet";
 
 function App() {
     const { getBlockInformation } = useContext(DataContext);
@@ -31,6 +32,7 @@ function App() {
                     <Route exact path="/txs" element={<Transactions />} />
                     <Route path="/tx/:hash" element={<Transaction />} />
                     <Route path="/address/:address" element={ <AddressDetails />} />
+                    <Route path="/wallet" element={ <Wallet />} />
                 </Routes>
             </main>
             <Footer />

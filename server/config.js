@@ -15,7 +15,7 @@ module.exports = {
             {
                 id: '63ec3ac02f822450039df13ddf7c3c0f19bab4acd4dc928c62fcd78d5ebc6dba',
                 hash: null,
-                type: 'regular',
+                type: 'genesis',
                 data: {
                     inputs: [],
                     outputs: []
