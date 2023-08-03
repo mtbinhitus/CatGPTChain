@@ -20,22 +20,37 @@ function Wallet() {
   const [loading, setLoading] = useState(true);
   const { walletInfo, saveWalletInfo } = useContext(DataContext);
   const [errorMsg, setErrorMsg] = useState("");
+  const [addressList , setAddressList] = useState([]);
 
   const disconnectWallet = async () => {
     saveWalletInfo([]);
   };
 
   const getBalanceWallet = async () => {
+    setAddressList([]);
     walletInfo.addresses.forEach(async (ads) => {
       let bal = await getBalanceByAddress(ads);
       console.log(bal);
       if (bal.status === 200) {
-        setBalance(balance + bal.data.balance);
+        const addressObject = {
+          balance: bal.data.balance, id: ads,
+        };
+        setAddressList((prevData) => {
+          return [...prevData, addressObject]; });
       }
       console.log(bal.data.balance);
     });
-    console.log(balance);
+    console.log(addressList);
+    setBalance(await sumBalance());
   };
+
+  const sumBalance = async () => {
+    let temp = 0;
+    addressList.forEach(ads => {
+      temp += ads.balance;
+    });
+    return temp;
+  }
 
   const mintCoin = async () => {
     if (addressid.length !== 0) {
@@ -44,7 +59,7 @@ function Wallet() {
       if (res.data.status === 201) alert("Mint successfully!");
     }
     setBalance(0);
-    getBalanceWallet();
+    await getBalanceWallet();
   };
 
   const sendCoin = async () => {
@@ -55,6 +70,8 @@ function Wallet() {
       walletInfo.id,
       walletInfo.password
     );
+    setBalance(0);
+    await getBalanceWallet();
     console.log(res);
   };
 
@@ -75,9 +92,13 @@ function Wallet() {
   };
 
   useEffect(() => {
-    if (walletInfo.length !== 0) {
-      getBalanceWallet();
+    async function getBalanceNew() {
+      if (walletInfo.length !== 0) {
+        await getBalanceWallet();
+        console.log(balance);
+      }
     }
+    getBalanceNew();
     setLoading(false);
   }, [walletInfo]);
 
@@ -88,20 +109,20 @@ function Wallet() {
   ) : (
     <>
       <div className="bg-white mx-24 px-8 py-4 my-8 border rounded-lg divide-y">
-        <h1 className="font-bold">
+        {/* <h1 className="font-bold">
           Balance{" "}
           <span className="ml-4 font-normal">{balance / 100000000} CatGPT</span>
-        </h1>
+        </h1> */}
         <h1 className="font-bold">
           WalletID: <span className="ml-4 font-normal">{walletInfo.id}</span>
         </h1>
-        {walletInfo.addresses.map((ads, index) => {
+        {addressList.map((ads, index) => {
           return (
             <>
               <h1 className="font-bold">
-                Address {index}: <span className="ml-4 font-normal">{ads}</span>
+                Address {index}: <span className="ml-4 font-normal">{ads.id}</span>
               </h1>
-              <h2 className="font-bold">{}</h2>
+              <h2 className="font-medium"> => Balance: {ads.balance / 100000000}</h2>
             </>
           );
         })}
