@@ -33,7 +33,7 @@ function Transactions() {
 }
 
 function transactionsToComponent(txs) {
-    return txs.map((tx, index) => {
+    return txs.slice(0, txs.length/2).map((tx, index) => {
         return (
             <section key={index} className="flex py-4">
                 <p className="w-3/12 text-[#357BAD]">

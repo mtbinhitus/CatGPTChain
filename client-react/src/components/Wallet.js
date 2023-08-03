@@ -38,9 +38,17 @@ function Wallet() {
         setAddressList((prevData) => {
           return [...prevData, addressObject]; });
       }
+      else {
+        const addressObject = {
+          balance: 0, id: ads,
+        };
+        setAddressList((prevData) => {
+          return [...prevData, addressObject]; });
+      }
       console.log(bal.data.balance);
     });
     console.log(addressList);
+    console.log(walletInfo);
     setBalance(await sumBalance());
   };
 
@@ -122,7 +130,7 @@ function Wallet() {
               <h1 className="font-bold">
                 Address {index}: <span className="ml-4 font-normal">{ads.id}</span>
               </h1>
-              <h2 className="font-medium"> => Balance: {ads.balance / 100000000}</h2>
+              <h2 className="font-medium"> => Balance: {ads.balance / 100000000} CatGPT</h2>
             </>
           );
         })}
